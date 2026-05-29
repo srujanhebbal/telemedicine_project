@@ -1,0 +1,58 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Patient Dashboard | MediConnect{% endblock %}
+{% block page_title %}Patient Dashboard{% endblock %}
+{% block dashboard %}
+<section class="stat-grid">
+    <article class="stat-card glass"><i data-lucide="calendar-days"></i><span>Appointments</span><strong>{{ appointments|length }}</strong></article>
+    <article class="stat-card glass"><i data-lucide="pill"></i><span>Active reminders</span><strong>{{ reminders|length }}</strong></article>
+    <article class="stat-card glass"><i data-lucide="message-circle"></i><span>Unread alerts</span><strong>{{ unread_notifications }}</strong></article>
+    <article class="stat-card glass"><i data-lucide="wallet"></i><span>Payments</span><strong>Ready</strong></article>
+</section>
+<section class="dashboard-grid two">
+    <article class="panel glass">
+        <div class="panel-head"><h2>Find doctors</h2><input class="search-input" id="doctorSearch" placeholder="Search specialization"></div>
+        <div class="doctor-list" id="doctorResults">
+            {% for doctor in doctors %}
+            <div class="list-card">
+                <div class="avatar-sm">{{ doctor.user.name[:2]|upper }}</div>
+                <div><strong>{{ doctor.user.name }}</strong><span>{{ doctor.specialization }} · {{ doctor.experience_years }} yrs</span></div>
+                <a class="btn tiny primary" href="{{ url_for('patient.appointments_page') }}">Book</a>
+            </div>
+            {% endfor %}
+        </div>
+    </article>
+    <article class="panel glass">
+        <div class="panel-head"><h2>Upcoming appointments</h2><a href="{{ url_for('patient.appointments_page') }}">View all</a></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Doctor</th><th>Date</th><th>Status</th><th>Room</th></tr></thead>
+                <tbody>
+                {% for appointment in appointments %}
+                    <tr><td>{{ appointment.doctor.user.name }}</td><td>{{ appointment.scheduled_at.strftime('%d %b, %I:%M %p') }}</td><td><span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span></td><td><a href="{{ url_for('patient.consultation_page', appointment_id=appointment.id) }}">Join</a></td></tr>
+                {% else %}
+                    <tr><td colspan="4">No appointments yet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+</section>
+<section class="dashboard-grid two">
+    <article class="panel glass">
+        <div class="panel-head"><h2>Medical reports</h2></div>
+        <form class="inline-form" id="reportForm" enctype="multipart/form-data">
+            <input name="title" placeholder="Report title" required>
+            <input type="file" name="report" required>
+            <button class="btn primary" type="submit">Upload</button>
+        </form>
+    </article>
+    <article class="panel glass">
+        <div class="panel-head"><h2>Reminder snapshot</h2><a href="{{ url_for('patient.reminder_page') }}">Manage</a></div>
+        {% for reminder in reminders %}
+        <div class="list-card"><i data-lucide="alarm-clock"></i><div><strong>{{ reminder.medicine_name }}</strong><span>{{ reminder.dosage }} at {{ reminder.reminder_time.strftime('%H:%M') }}</span></div></div>
+        {% else %}
+        <p class="muted">No active reminders.</p>
+        {% endfor %}
+    </article>
+</section>
+{% endblock %}

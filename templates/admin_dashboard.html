@@ -1,0 +1,39 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Admin Dashboard | MediConnect{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+{% block dashboard %}
+<section class="stat-grid">
+    {% for label, value, icon in [('Users', stats.users, 'users'), ('Doctors', stats.doctors, 'stethoscope'), ('Patients', stats.patients, 'heart-handshake'), ('Appointments', stats.appointments, 'calendar-check')] %}
+    <article class="stat-card glass"><i data-lucide="{{ icon }}"></i><span>{{ label }}</span><strong>{{ value }}</strong></article>
+    {% endfor %}
+</section>
+<section class="dashboard-grid two">
+    <article class="panel glass">
+        <div class="panel-head"><h2>Doctor approvals</h2></div>
+        {% for doctor in doctors %}
+        <div class="list-card">
+            <div class="avatar-sm">{{ doctor.user.name[:2]|upper }}</div>
+            <div><strong>{{ doctor.user.name }}</strong><span>{{ doctor.specialization }} · {{ 'Approved' if doctor.approved else 'Pending' }}</span></div>
+            <button class="btn tiny primary" data-approve-doctor="{{ doctor.id }}">Approve</button>
+        </div>
+        {% endfor %}
+    </article>
+    <article class="panel glass">
+        <div class="panel-head"><h2>Database monitoring</h2></div>
+        <div class="monitor-grid">
+            <div><span>Reports</span><strong>{{ stats.reports }}</strong></div>
+            <div><span>Reminders</span><strong>{{ stats.reminders }}</strong></div>
+            <div><span>Socket.IO</span><strong>Online</strong></div>
+            <div><span>MySQL</span><strong>Configured</strong></div>
+        </div>
+    </article>
+</section>
+<section class="panel glass">
+    <div class="panel-head"><h2>Recent appointments</h2></div>
+    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Patient</th><th>Doctor</th><th>Status</th></tr></thead><tbody>
+        {% for appointment in appointments %}
+        <tr><td>#{{ appointment.id }}</td><td>{{ appointment.patient.user.name }}</td><td>{{ appointment.doctor.user.name }}</td><td><span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span></td></tr>
+        {% endfor %}
+    </tbody></table></div>
+</section>
+{% endblock %}

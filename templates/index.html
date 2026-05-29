@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}MediConnect Telemedicine{% endblock %}
+{% block body %}
+<header class="site-header" id="top">
+    <nav class="nav shell">
+        <a class="brand" href="#top"><span class="brand-mark">+</span>MediConnect</a>
+        <button class="icon-btn nav-toggle" data-nav-toggle aria-label="Open navigation"><i data-lucide="menu"></i></button>
+        <div class="nav-links" data-nav-links>
+            <a href="#about">About</a>
+            <a href="#services">Services</a>
+            <a href="#doctors">Doctors</a>
+            <a href="#faq">FAQ</a>
+            <a href="#contact">Contact</a>
+            <a class="btn ghost" href="{{ url_for('auth.login') }}">Login</a>
+            <a class="btn primary" href="{{ url_for('auth.register') }}">Register</a>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <section class="hero shell">
+        <div class="hero-copy reveal">
+            <span class="eyebrow">Secure virtual healthcare</span>
+            <h1>Care that meets patients and doctors where they are.</h1>
+            <p>Book trusted specialists, consult by chat, audio, or video, manage reports, prescriptions, reminders, and appointment updates from one protected portal.</p>
+            <div class="hero-actions">
+                <a class="btn primary large" href="{{ url_for('auth.register') }}">Get started</a>
+                <a class="btn soft large" href="{{ url_for('auth.login') }}">Access portal</a>
+            </div>
+        </div>
+        <div class="hero-panel glass reveal">
+            <div class="pulse-ring"></div>
+            <div class="doctor-visual">
+                <div class="avatar-lg">AL</div>
+                <div>
+                    <strong>Dr. Amelia Lee</strong>
+                    <span>Cardiology consultation</span>
+                </div>
+            </div>
+            <div class="vitals-grid">
+                <div><span>Heart rate</span><strong>76 bpm</strong></div>
+                <div><span>Oxygen</span><strong>98%</strong></div>
+                <div><span>Next slot</span><strong>10:30</strong></div>
+                <div><span>Rating</span><strong>4.9</strong></div>
+            </div>
+            <div class="mini-chat">
+                <p>Prescription uploaded and reminder scheduled.</p>
+                <span>Just now</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="section shell" id="about">
+        <div class="section-heading">
+            <span class="eyebrow">About telemedicine</span>
+            <h2>A connected clinical workflow for modern care teams.</h2>
+        </div>
+        <div class="feature-row">
+            <article class="glass feature-card"><i data-lucide="shield-check"></i><h3>Protected access</h3><p>Every dashboard, record, chat, and consultation page is available only after authentication.</p></article>
+            <article class="glass feature-card"><i data-lucide="calendar-check"></i><h3>Smart scheduling</h3><p>Patients request appointments while doctors approve, reject, or complete consultations.</p></article>
+            <article class="glass feature-card"><i data-lucide="video"></i><h3>Live care</h3><p>Socket.IO chat and WebRTC signaling support real-time consultation rooms.</p></article>
+        </div>
+    </section>
+
+    <section class="section service-band" id="services">
+        <div class="shell">
+            <div class="section-heading">
+                <span class="eyebrow">Services</span>
+                <h2>Everything a virtual clinic needs.</h2>
+            </div>
+            <div class="service-grid">
+                {% for icon, title in [('stethoscope','General care'),('heart-pulse','Cardiology'),('brain','Mental wellness'),('pill','Medication reminders'),('file-heart','Reports'),('wallet-cards','Payments UI')] %}
+                <article class="service-card glass"><i data-lucide="{{ icon }}"></i><strong>{{ title }}</strong></article>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section shell" id="doctors">
+        <div class="section-heading">
+            <span class="eyebrow">Doctor showcase</span>
+            <h2>Specialists presented with clear clinical context.</h2>
+        </div>
+        <div class="doctor-grid">
+            {% for name, spec, rating in [('Dr. Amelia Lee','Cardiology','4.9'),('Dr. Noah Patel','Dermatology','4.8'),('Dr. Sofia Chen','Pediatrics','4.9')] %}
+            <article class="doctor-card glass">
+                <div class="avatar-lg">{{ name.split(' ')[1][0] }}{{ name.split(' ')[2][0] }}</div>
+                <h3>{{ name }}</h3>
+                <p>{{ spec }}</p>
+                <span><i data-lucide="star"></i>{{ rating }} patient rating</span>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="section shell testimonials">
+        <div class="section-heading">
+            <span class="eyebrow">Testimonials</span>
+            <h2>Designed for confidence and calm.</h2>
+        </div>
+        <div class="feature-row">
+            <blockquote class="glass">“Booking and follow-up felt simple, even on my phone.”<cite>Rina, patient</cite></blockquote>
+            <blockquote class="glass">“The dashboard makes upcoming appointments easy to triage.”<cite>Dr. Hayes</cite></blockquote>
+            <blockquote class="glass">“Approvals, reports, and messages are all visible in one place.”<cite>Clinic admin</cite></blockquote>
+        </div>
+    </section>
+
+    <section class="section shell" id="faq">
+        <div class="section-heading"><span class="eyebrow">FAQ</span><h2>Common questions.</h2></div>
+        <div class="faq-list">
+            <details class="glass"><summary>Can users browse dashboards without login?</summary><p>No. All dashboard, appointment, chat, reminder, profile, and consultation pages are protected.</p></details>
+            <details class="glass"><summary>Can doctors self-register?</summary><p>Yes. Admins approve doctor accounts before patients can book them.</p></details>
+            <details class="glass"><summary>Does the app include AI features?</summary><p>No. The project intentionally contains no AI integrations.</p></details>
+        </div>
+    </section>
+
+    <section class="section shell" id="contact">
+        <div class="contact-layout">
+            <div class="section-heading"><span class="eyebrow">Contact</span><h2>Talk to the virtual clinic team.</h2></div>
+            <form class="glass contact-form">
+                <input type="text" placeholder="Full name" required>
+                <input type="email" placeholder="Email address" required>
+                <textarea placeholder="Message" rows="5" required></textarea>
+                <button class="btn primary" type="submit">Send message</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="shell footer-inner">
+        <strong>MediConnect</strong>
+        <span>Secure telemedicine portal for patients, doctors, and admins.</span>
+    </div>
+</footer>
+{% endblock %}

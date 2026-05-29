@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}MediConnect{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <div class="page-loader" id="pageLoader"><span></span></div>
+    <div class="toast-stack" id="toastStack">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+        <div class="toast {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endwith %}
+    </div>
+    {% block body %}{% endblock %}
+    {% if current_user.is_authenticated %}
+    <script>
+    window.MEDI_USER_ID = "{{ current_user.get_id() }}";
+    </script>
+    {% else %}
+    <script>
+    window.MEDI_USER_ID = null;
+    </script>
+    {% endif %}
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

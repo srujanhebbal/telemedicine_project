@@ -1,0 +1,29 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Appointments | MediConnect{% endblock %}
+{% block page_title %}Book Appointment{% endblock %}
+{% block dashboard %}
+<section class="dashboard-grid two">
+    <article class="panel glass">
+        <div class="panel-head"><h2>New booking</h2></div>
+        <form class="stack-form" id="appointmentForm">
+            <label>Doctor
+                <select name="doctor_id" required>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.id }}">{{ doctor.user.name }} - {{ doctor.specialization }} (${{ doctor.consultation_fee }})</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Date and time<input type="datetime-local" name="scheduled_at" required></label>
+            <label>Mode
+                <select name="mode"><option value="video">Video</option><option value="audio">Audio</option><option value="chat">Chat</option></select>
+            </label>
+            <label>Reason<textarea name="reason" rows="4" placeholder="Symptoms or reason for visit"></textarea></label>
+            <button class="btn primary" type="submit">Request appointment</button>
+        </form>
+    </article>
+    <article class="panel glass">
+        <div class="panel-head"><h2>Appointment history</h2></div>
+        <div class="table-wrap"><table id="appointmentTable"><thead><tr><th>Doctor</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead><tbody></tbody></table></div>
+    </article>
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Consultation Room | MediConnect{% endblock %}
+{% block page_title %}Consultation Room #{{ appointment_id }}{% endblock %}
+{% block dashboard %}
+<section class="video-room glass" data-appointment-id="{{ appointment_id }}">
+    <div class="video-grid">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <video id="localVideo" autoplay playsinline muted></video>
+    </div>
+    <div class="call-controls">
+        <button class="icon-btn" id="muteBtn" aria-label="Mute"><i data-lucide="mic"></i></button>
+        <button class="icon-btn" id="videoBtn" aria-label="Toggle video"><i data-lucide="video"></i></button>
+        <button class="icon-btn danger-bg" id="endBtn" aria-label="End call"><i data-lucide="phone-off"></i></button>
+    </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/webrtc.js') }}"></script>{% endblock %}

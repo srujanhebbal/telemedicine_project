@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Contact | MediConnect{% endblock %}
+{% block body %}
+<main class="auth-screen">
+    <section class="auth-card glass wide">
+        <span class="eyebrow">Contact</span>
+        <h1>Reach the MediConnect team.</h1>
+        <form class="stack-form grid-form">
+            <label>Full name<input required></label>
+            <label>Email<input type="email" required></label>
+            <label class="grid-span">Message<textarea rows="6" required></textarea></label>
+            <button class="btn primary grid-span" type="button">Send message</button>
+        </form>
+        <div class="auth-links"><a href="{{ url_for('auth.home') }}">Back home</a></div>
+    </section>
+</main>
+{% endblock %}

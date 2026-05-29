@@ -1,0 +1,24 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Profile | MediConnect{% endblock %}
+{% block page_title %}Profile{% endblock %}
+{% block dashboard %}
+<section class="dashboard-grid two">
+    <article class="panel glass">
+        <div class="profile-card">
+            <div class="avatar-xl">{{ user.name[:2]|upper }}</div>
+            <h2>{{ user.name }}</h2>
+            <p>{{ user.email }}</p>
+            <span class="status approved">{{ user.role|title }}</span>
+        </div>
+    </article>
+    <article class="panel glass">
+        <div class="panel-head"><h2>Health record</h2></div>
+        <div class="record-grid">
+            <div><span>Phone</span><strong>{{ user.phone or 'Not set' }}</strong></div>
+            <div><span>Blood group</span><strong>{{ user.patient.blood_group or 'Not set' }}</strong></div>
+            <div><span>Gender</span><strong>{{ user.patient.gender or 'Not set' }}</strong></div>
+            <div><span>Allergies</span><strong>{{ user.patient.allergies or 'None recorded' }}</strong></div>
+        </div>
+    </article>
+</section>
+{% endblock %}

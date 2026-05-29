@@ -1,0 +1,21 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Medicine Reminders | MediConnect{% endblock %}
+{% block page_title %}Medicine Reminders{% endblock %}
+{% block dashboard %}
+<section class="dashboard-grid two">
+    <article class="panel glass">
+        <div class="panel-head"><h2>Add reminder</h2></div>
+        <form class="stack-form" id="reminderForm">
+            <label>Medicine<input name="medicine_name" required placeholder="Metformin"></label>
+            <label>Dosage<input name="dosage" required placeholder="500 mg after food"></label>
+            <label>Time<input type="time" name="reminder_time" required></label>
+            <label>Schedule<select name="schedule"><option>Daily</option><option>Weekdays</option><option>Alternate days</option></select></label>
+            <button class="btn primary" type="submit">Add reminder</button>
+        </form>
+    </article>
+    <article class="panel glass">
+        <div class="panel-head"><h2>Daily schedule</h2></div>
+        <div id="reminderList" class="reminder-list"></div>
+    </article>
+</section>
+{% endblock %}

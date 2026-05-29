@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="app-shell">
+    <aside class="sidebar glass">
+        <a class="brand" href="#"><span class="brand-mark">+</span>MediConnect</a>
+        <nav class="side-nav">
+            {% if current_user.role == 'patient' %}
+            <a href="{{ url_for('patient.dashboard') }}"><i data-lucide="layout-dashboard"></i>Dashboard</a>
+            <a href="{{ url_for('patient.appointments_page') }}"><i data-lucide="calendar-plus"></i>Appointments</a>
+            <a href="{{ url_for('patient.reminder_page') }}"><i data-lucide="alarm-clock"></i>Reminders</a>
+            <a href="{{ url_for('patient.profile_page') }}"><i data-lucide="user-round"></i>Profile</a>
+            {% elif current_user.role == 'doctor' %}
+            <a href="{{ url_for('doctor.dashboard') }}"><i data-lucide="layout-dashboard"></i>Dashboard</a>
+            {% else %}
+            <a href="{{ url_for('admin.dashboard') }}"><i data-lucide="layout-dashboard"></i>Dashboard</a>
+            {% endif %}
+        </nav>
+        <a class="btn soft full" href="{{ url_for('auth.logout') }}"><i data-lucide="log-out"></i>Logout</a>
+    </aside>
+    <main class="dashboard-main">
+        <header class="dashboard-top glass">
+            <button class="icon-btn sidebar-toggle" data-sidebar-toggle aria-label="Toggle sidebar"><i data-lucide="menu"></i></button>
+            <div>
+                <span class="eyebrow">{{ current_user.role|title }} portal</span>
+                <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+            </div>
+            <div class="top-actions">
+                <button class="icon-btn" data-theme-toggle aria-label="Toggle theme"><i data-lucide="moon"></i></button>
+                <button class="notification-pill" data-open-notifications><i data-lucide="bell"></i><span>{{ unread_notifications }}</span></button>
+                <div class="avatar-sm">{{ current_user.name[:2]|upper }}</div>
+            </div>
+        </header>
+        {% block dashboard %}{% endblock %}
+    </main>
+</div>
+<div class="modal-backdrop hidden" id="notificationModal">
+    <section class="modal glass">
+        <button class="icon-btn modal-close" data-close-modal aria-label="Close"><i data-lucide="x"></i></button>
+        <h2>Notifications</h2>
+        <div id="notificationList" class="notification-list"></div>
+    </section>
+</div>
+{% endblock %}

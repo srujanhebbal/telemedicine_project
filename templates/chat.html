@@ -1,0 +1,12 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Chat | MediConnect{% endblock %}
+{% block page_title %}Consultation Chat #{{ appointment_id }}{% endblock %}
+{% block dashboard %}
+<section class="panel glass chat-panel" data-appointment-id="{{ appointment_id }}">
+    <div class="chat-stream" id="chatStream"></div>
+    <form class="chat-compose" id="chatForm">
+        <input id="chatInput" maxlength="1500" placeholder="Type a secure message" autocomplete="off" required>
+        <button class="btn primary" type="submit"><i data-lucide="send"></i>Send</button>
+    </form>
+</section>
+{% endblock %}

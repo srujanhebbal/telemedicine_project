@@ -1,0 +1,47 @@
+{% extends "dashboard_base.html" %}
+{% block title %}Doctor Dashboard | MediConnect{% endblock %}
+{% block page_title %}Doctor Dashboard{% endblock %}
+{% block dashboard %}
+<section class="stat-grid">
+    <article class="stat-card glass"><i data-lucide="calendar-clock"></i><span>Requests</span><strong>{{ appointments|selectattr('status','equalto','Pending')|list|length }}</strong></article>
+    <article class="stat-card glass"><i data-lucide="check-circle"></i><span>Approved</span><strong>{{ appointments|selectattr('status','equalto','Approved')|list|length }}</strong></article>
+    <article class="stat-card glass"><i data-lucide="trending-up"></i><span>Rating</span><strong>{{ user.doctor.rating }}</strong></article>
+    <article class="stat-card glass"><i data-lucide="badge-dollar-sign"></i><span>Earnings UI</span><strong>${{ appointments|length * (user.doctor.consultation_fee or 0) }}</strong></article>
+</section>
+<section class="dashboard-grid two">
+    <article class="panel glass">
+        <div class="panel-head"><h2>Appointment queue</h2></div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Patient</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
+                <tbody>
+                {% for appointment in appointments %}
+                <tr data-appointment-row="{{ appointment.id }}">
+                    <td>{{ appointment.patient.user.name }}</td>
+                    <td>{{ appointment.scheduled_at.strftime('%d %b, %I:%M %p') }}</td>
+                    <td><span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span></td>
+                    <td class="action-row">
+                        <button class="btn tiny soft" data-status-id="{{ appointment.id }}" data-status="Approved">Approve</button>
+                        <button class="btn tiny danger" data-status-id="{{ appointment.id }}" data-status="Rejected">Reject</button>
+                        <a class="btn tiny primary" href="{{ url_for('doctor.consultation_page', appointment_id=appointment.id) }}">Room</a>
+                        <a class="btn tiny soft" href="{{ url_for('doctor.chat_page', appointment_id=appointment.id) }}">Chat</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4">No appointments yet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
+    <article class="panel glass">
+        <div class="panel-head"><h2>Prescription upload</h2></div>
+        <form class="stack-form" id="prescriptionForm" enctype="multipart/form-data">
+            <input name="appointment_id" placeholder="Appointment ID" required>
+            <textarea name="notes" placeholder="Consultation notes" rows="5"></textarea>
+            <input type="file" name="prescription">
+            <button class="btn primary" type="submit">Upload prescription</button>
+        </form>
+    </article>
+</section>
+{% endblock %}
