@@ -49,7 +49,7 @@ def register():
                     qualification=request.form.get("qualification", ""),
                     experience_years=int(request.form.get("experience_years") or 0),
                     consultation_fee=request.form.get("consultation_fee") or 0,
-                    approved=False,
+                    approved=true,
                 )
             )
         else:
