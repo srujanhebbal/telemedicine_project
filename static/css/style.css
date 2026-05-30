@@ -235,3 +235,13 @@ th { color: var(--muted); font-size: .82rem; text-transform: uppercase; letter-s
     .message { max-width: 90%; }
     .footer-inner { flex-direction: column; }
 }
+
+
+.patient-inbox-panel { display: grid; gap: 16px; }
+.dashboard-action-tabs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.dashboard-action-tabs .btn { min-height: 54px; justify-content: center; }
+.dashboard-action-tabs .btn span { min-width: 28px; min-height: 28px; display: inline-grid; place-items: center; border-radius: 999px; background: rgba(255, 255, 255, .28); }
+.dashboard-tab-panel { display: grid; gap: 10px; }
+.compact-list-card { margin-bottom: 0; }
+.compact-list-card small { display: block; color: var(--muted); margin-top: 4px; font-weight: 700; }
+@media (max-width: 720px) { .dashboard-action-tabs { grid-template-columns: 1fr; } }

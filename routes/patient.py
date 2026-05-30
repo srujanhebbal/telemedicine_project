@@ -24,7 +24,26 @@ def dashboard():
     doctors = Doctor.query.filter_by(approved=True).limit(6).all()
     appointments = Appointment.query.filter_by(patient_id=user.patient.id).order_by(Appointment.scheduled_at.desc()).limit(8).all()
     reminders = MedicineReminder.query.filter_by(patient_id=user.patient.id, is_active=True).limit(5).all()
-    return render_template("patient_dashboard.html", user=user, doctors=doctors, appointments=appointments, reminders=reminders)
+    prescriptions = Prescription.query.filter_by(patient_id=user.patient.id).order_by(Prescription.created_at.desc()).limit(5).all()
+    latest_messages = (
+        Message.query
+        .join(Appointment, Message.appointment_id == Appointment.id)
+        .filter(Appointment.patient_id == user.patient.id, Message.receiver_id == user.id)
+        .order_by(Message.created_at.desc())
+        .limit(5)
+        .all()
+    )
+    notifications = Notification.query.filter_by(user_id=user.id).order_by(Notification.created_at.desc()).limit(5).all()
+    return render_template(
+        "patient_dashboard.html",
+        user=user,
+        doctors=doctors,
+        appointments=appointments,
+        reminders=reminders,
+        prescriptions=prescriptions,
+        latest_messages=latest_messages,
+        notifications=notifications,
+    )
 
 
 @patient_bp.route("/appointments")

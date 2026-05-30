@@ -5,30 +5,50 @@
 <section class="stat-grid">
     <article class="stat-card glass"><i data-lucide="calendar-days"></i><span>Appointments</span><strong>{{ appointments|length }}</strong></article>
     <article class="stat-card glass"><i data-lucide="pill"></i><span>Active reminders</span><strong>{{ reminders|length }}</strong></article>
-    <article class="stat-card glass"><i data-lucide="message-circle"></i><span>Unread alerts</span><strong>{{ unread_notifications }}</strong></article>
-    <article class="stat-card glass"><i data-lucide="wallet"></i><span>Payments</span><strong>Ready</strong></article>
+    <article class="stat-card glass"><i data-lucide="message-circle"></i><span>Doctor messages</span><strong>{{ latest_messages|length }}</strong></article>
+    <article class="stat-card glass"><i data-lucide="file-text"></i><span>Prescriptions</span><strong>{{ prescriptions|length }}</strong></article>
 </section>
+
 <section class="dashboard-grid two">
     <article class="panel glass">
-        <div class="panel-head"><h2>Find doctors</h2><input class="search-input" id="doctorSearch" placeholder="Search specialization"></div>
+        <div class="panel-head">
+            <h2>Find doctors</h2>
+            <input class="search-input" id="doctorSearch" placeholder="Search specialization">
+        </div>
         <div class="doctor-list" id="doctorResults">
             {% for doctor in doctors %}
             <div class="list-card">
                 <div class="avatar-sm">{{ doctor.user.name[:2]|upper }}</div>
-                <div><strong>{{ doctor.user.name }}</strong><span>{{ doctor.specialization }} · {{ doctor.experience_years }} yrs</span></div>
+                <div>
+                    <strong>{{ doctor.user.name }}</strong>
+                    <span>{{ doctor.specialization }} - {{ doctor.experience_years }} yrs</span>
+                </div>
                 <a class="btn tiny primary" href="{{ url_for('patient.appointments_page') }}">Book</a>
             </div>
+            {% else %}
+            <p class="muted">No approved doctors available yet.</p>
             {% endfor %}
         </div>
     </article>
+
     <article class="panel glass">
-        <div class="panel-head"><h2>Upcoming appointments</h2><a href="{{ url_for('patient.appointments_page') }}">View all</a></div>
+        <div class="panel-head">
+            <h2>Upcoming appointments</h2>
+            <a href="{{ url_for('patient.appointments_page') }}">View all</a>
+        </div>
         <div class="table-wrap">
             <table>
-                <thead><tr><th>Doctor</th><th>Date</th><th>Status</th><th>Room</th></tr></thead>
+                <thead>
+                    <tr><th>Doctor</th><th>Date</th><th>Status</th><th>Room</th></tr>
+                </thead>
                 <tbody>
                 {% for appointment in appointments %}
-                    <tr><td>{{ appointment.doctor.user.name }}</td><td>{{ appointment.scheduled_at.strftime('%d %b, %I:%M %p') }}</td><td><span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span></td><td><a href="{{ url_for('patient.consultation_page', appointment_id=appointment.id) }}">Join</a></td></tr>
+                    <tr>
+                        <td>{{ appointment.doctor.user.name }}</td>
+                        <td>{{ appointment.scheduled_at.strftime('%d %b, %I:%M %p') }}</td>
+                        <td><span class="status {{ appointment.status|lower }}">{{ appointment.status }}</span></td>
+                        <td><a href="{{ url_for('patient.consultation_page', appointment_id=appointment.id) }}">Join</a></td>
+                    </tr>
                 {% else %}
                     <tr><td colspan="4">No appointments yet.</td></tr>
                 {% endfor %}
@@ -37,6 +57,7 @@
         </div>
     </article>
 </section>
+
 <section class="dashboard-grid two">
     <article class="panel glass">
         <div class="panel-head"><h2>Medical reports</h2></div>
@@ -46,13 +67,123 @@
             <button class="btn primary" type="submit">Upload</button>
         </form>
     </article>
+
     <article class="panel glass">
-        <div class="panel-head"><h2>Reminder snapshot</h2><a href="{{ url_for('patient.reminder_page') }}">Manage</a></div>
+        <div class="panel-head">
+            <h2>Reminder snapshot</h2>
+            <a href="{{ url_for('patient.reminder_page') }}">Manage</a>
+        </div>
         {% for reminder in reminders %}
-        <div class="list-card"><i data-lucide="alarm-clock"></i><div><strong>{{ reminder.medicine_name }}</strong><span>{{ reminder.dosage }} at {{ reminder.reminder_time.strftime('%H:%M') }}</span></div></div>
+        <div class="list-card">
+            <i data-lucide="alarm-clock"></i>
+            <div>
+                <strong>{{ reminder.medicine_name }}</strong>
+                <span>{{ reminder.dosage }} at {{ reminder.reminder_time.strftime('%H:%M') }}</span>
+            </div>
+        </div>
         {% else %}
         <p class="muted">No active reminders.</p>
         {% endfor %}
     </article>
 </section>
+
+<section class="panel glass patient-inbox-panel">
+    <div class="panel-head">
+        <h2>Patient inbox</h2>
+        <span class="muted">Open only what you need</span>
+    </div>
+
+    <div class="dashboard-action-tabs" role="tablist" aria-label="Patient inbox sections">
+        <button class="btn primary" type="button" data-dashboard-tab="messages">
+            <i data-lucide="message-circle"></i>
+            Messages
+            <span>{{ latest_messages|length }}</span>
+        </button>
+        <button class="btn soft" type="button" data-dashboard-tab="prescriptions">
+            <i data-lucide="file-text"></i>
+            Prescriptions
+            <span>{{ prescriptions|length }}</span>
+        </button>
+        <button class="btn soft" type="button" data-dashboard-tab="notifications">
+            <i data-lucide="bell"></i>
+            Notifications
+            <span>{{ notifications|length }}</span>
+        </button>
+    </div>
+
+    <div class="dashboard-tab-panel" data-dashboard-panel="messages">
+        {% for message in latest_messages %}
+        <div class="list-card compact-list-card">
+            <i data-lucide="message-circle"></i>
+            <div>
+                <strong>{{ message.sender.name }}</strong>
+                <span>{{ message.body[:90] }}{% if message.body|length > 90 %}...{% endif %}</span>
+                <small>{{ message.created_at.strftime('%d %b, %I:%M %p') }}</small>
+            </div>
+            <a class="btn tiny primary" href="{{ url_for('patient.chat_page', appointment_id=message.appointment_id) }}">Open</a>
+        </div>
+        {% else %}
+        <p class="muted">No doctor messages yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="dashboard-tab-panel hidden" data-dashboard-panel="prescriptions">
+        {% for prescription in prescriptions %}
+        <div class="list-card compact-list-card">
+            <i data-lucide="file-text"></i>
+            <div>
+                <strong>{{ prescription.appointment.doctor.user.name }}</strong>
+                <span>{{ prescription.notes[:90] if prescription.notes else 'Prescription uploaded' }}{% if prescription.notes and prescription.notes|length > 90 %}...{% endif %}</span>
+                <small>{{ prescription.created_at.strftime('%d %b, %I:%M %p') }}</small>
+            </div>
+            {% if prescription.file_path %}
+            <a class="btn tiny primary" href="{{ url_for('patient.download_prescription', prescription_id=prescription.id) }}">Download</a>
+            {% endif %}
+        </div>
+        {% else %}
+        <p class="muted">No prescriptions uploaded yet.</p>
+        {% endfor %}
+    </div>
+
+    <div class="dashboard-tab-panel hidden" data-dashboard-panel="notifications">
+        {% for notification in notifications %}
+        <div class="list-card compact-list-card">
+            <i data-lucide="bell"></i>
+            <div>
+                <strong>{{ notification.title }}</strong>
+                <span>{{ notification.body }}</span>
+                <small>{{ notification.created_at.strftime('%d %b, %I:%M %p') }}</small>
+            </div>
+        </div>
+        {% else %}
+        <p class="muted">No notifications yet.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const buttons = [...document.querySelectorAll("[data-dashboard-tab]")];
+    const panels = [...document.querySelectorAll("[data-dashboard-panel]")];
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const target = button.dataset.dashboardTab;
+
+            buttons.forEach((item) => {
+                item.classList.toggle("primary", item === button);
+                item.classList.toggle("soft", item !== button);
+            });
+
+            panels.forEach((panel) => {
+                panel.classList.toggle("hidden", panel.dataset.dashboardPanel !== target);
+            });
+
+            window.lucide?.createIcons();
+        });
+    });
+});
+</script>
 {% endblock %}
