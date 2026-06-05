@@ -1,3 +1,10 @@
+#terminal kill cmds
+lsof -i :5002
+
+COMMAND PID USER FD TYPE DEVICE SIZE/OFF NODE NAME Python 1929 srujanhebbal 3u IPv4 0xc758fef3afd61718 0t0 TCP *:rfe (LISTEN) Python 1938 srujanhebbal 3u IPv4 0xc758fef3afd61718 0t0 TCP *:rfe (LISTEN) Python 1938 srujanhebbal 5u IPv4 0xc758fef3afd61718 0t0 TCP *:rfe (LISTEN)
+
+kill -9 1929 1938
+
 # MediConnect Telemedicine Web Application
 
 MediConnect is a full-stack Flask, MySQL, Socket.IO, and WebRTC telemedicine portal with role-based dashboards for patients, doctors, and admins. It includes secure registration/login, appointment booking with double-booking protection, real-time chat, WebRTC consultation rooms, uploads, prescriptions, notifications, reminders, and a responsive healthcare glassmorphism UI.
